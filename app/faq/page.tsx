@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
-import { ContactForm } from "@/components/ContactForm";
+import { ConsultWizard } from "@/components/ConsultWizard";
+import { FaqSearch } from "@/components/FaqSearch";
 import { JsonLd } from "@/components/JsonLd";
-import { faqItems } from "@/lib/site";
+import { PageHero } from "@/components/PageHero";
 import { breadcrumbSchema, faqSchema, pageMetadata } from "@/lib/seo";
+import { faqItems } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "FAQ | Vodafone Beratung, Kabelinternet, Glasfaser & Verfügbarkeit",
@@ -16,20 +18,19 @@ export default function FaqPage() {
     <>
       <JsonLd data={breadcrumbSchema([{ name: "Start", href: "/" }, { name: "FAQ", href: "/faq" }])} />
       <JsonLd data={faqSchema(faqItems)} />
-      <section className="sub-hero">
-        <p className="eyebrow">FAQ</p>
-        <h1>Häufige Fragen. Klare Antworten.</h1>
-        <p>Hier findest du klare Antworten zu Produkten, Verfügbarkeit, Kabelinternet, Glasfaser, HÜP, Koaxialkabel und persönlicher Beratung.</p>
+      <PageHero
+        crumbs={[{ name: "Start", href: "/" }, { name: "FAQ" }]}
+        eyebrow="FAQ"
+        title={<>Häufige Fragen. <span className="text-red">Klare Antworten.</span></>}
+        lead="Alles zu Produkten, Verfügbarkeit, Kabelinternet, Glasfaser, HÜP, Koaxialkabel und persönlicher Beratung – kurz und verständlich."
+        compact
+      />
+      <section className="section section-tight">
+        <div className="wrap wrap-narrow">
+          <FaqSearch items={faqItems} />
+        </div>
       </section>
-      <section className="section faq-strip faq-page-list">
-        {faqItems.map((item) => (
-          <details key={item.question}>
-            <summary>{item.question}</summary>
-            <p>{item.answer}</p>
-          </details>
-        ))}
-      </section>
-      <ContactForm />
+      <ConsultWizard title="Deine Frage war nicht dabei?" />
     </>
   );
 }

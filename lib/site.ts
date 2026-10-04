@@ -27,14 +27,40 @@ export const assets = {
 };
 
 export const navItems = [
-  { href: "/", label: "Start" },
-  { href: "/#beratung", label: "Beratung" },
-  { href: "/#leistungen", label: "Leistungen" },
   { href: "/verfuegbarkeit-pruefen", label: "Verfügbarkeit" },
   { href: "/ratgeber", label: "Ratgeber" },
-  { href: "/faq", label: "FAQ" },
-  { href: "/#kontakt", label: "Kontakt" }
+  { href: "/#region", label: "Region" },
+  { href: "/faq", label: "FAQ" }
 ];
+
+/** Ungefähre Ortsmitte (Breite, Länge) für die Regionskarte. */
+export const coordinates: Record<string, [number, number]> = {
+  "vodafone-beratung-wietze": [52.65, 9.833],
+  "vodafone-beratung-celle": [52.625, 10.081],
+  "vodafone-beratung-hannover": [52.375, 9.732],
+  "vodafone-beratung-hambuehren": [52.633, 9.983],
+  "vodafone-beratung-winsen-aller": [52.68, 9.91],
+  "vodafone-beratung-bergen": [52.81, 9.961],
+  "vodafone-beratung-suedheide": [52.862, 10.2],
+  "vodafone-beratung-hermannsburg": [52.832, 10.091],
+  "vodafone-beratung-unterluess": [52.851, 10.296],
+  "vodafone-beratung-fassberg": [52.903, 10.166],
+  "vodafone-beratung-eschede": [52.735, 10.236],
+  "vodafone-beratung-lachendorf": [52.618, 10.252],
+  "vodafone-beratung-wienhausen": [52.58, 10.187],
+  "vodafone-beratung-nienhagen": [52.558, 10.103],
+  "vodafone-beratung-adelheidsdorf": [52.584, 10.035],
+  "vodafone-beratung-wathlingen": [52.537, 10.152],
+  "vodafone-beratung-burgdorf": [52.446, 10.006],
+  "vodafone-beratung-burgwedel": [52.493, 9.858],
+  "vodafone-beratung-wedemark": [52.537, 9.705],
+  "vodafone-beratung-langenhagen": [52.44, 9.74],
+  "vodafone-beratung-isernhagen": [52.458, 9.86],
+  "vodafone-beratung-schwarmstedt": [52.677, 9.617],
+  "vodafone-beratung-uetze": [52.465, 10.204]
+};
+
+export const hubSlugs = ["vodafone-beratung-wietze", "vodafone-beratung-celle", "vodafone-beratung-hannover"];
 
 export type LocationPage = {
   slug: string;
@@ -97,6 +123,7 @@ export type ServicePage = {
   h1: string;
   description: string;
   intro: string;
+  teaser: string;
   icon: string;
   points: string[];
 };
@@ -110,6 +137,7 @@ export const services: ServicePage[] = [
       "Vodafone Internet und Kabel je nach Adresse verständlich einordnen lassen: HFC, Koax, HÜP, Router und Verfügbarkeit erklärt.",
     intro:
       "Ob Kabelinternet an deiner Adresse möglich ist, hängt vom Netz und vom Gebäude ab. Wir erklären HFC, Koaxialkabel und Hausanschluss verständlich.",
+    teaser: "Kabelinternet je nach Adresse: HFC, Koax, HÜP und Router verständlich eingeordnet.",
     icon: "coax",
     points: ["HFC und Koax verständlich erklärt", "Adresse und Gebäude prüfen", "Möglichkeiten realistisch einordnen"]
   },
@@ -121,6 +149,7 @@ export const services: ServicePage[] = [
       "Vodafone Glasfaser Beratung für Wietze, Celle, Hannover und Umgebung: Ausbau, Buchbarkeit und Aktivierung verständlich einordnen.",
     intro:
       "Glasfaser wird nach Ausbaugebiet, Buchbarkeit, Hausanschluss und Aktivierung betrachtet. Besonders in Wietze liegt der Fokus klar auf Glasfaser.",
+    teaser: "Ausbau, Buchbarkeit und Aktivierung sauber getrennt – mit klarem Fokus auf deine Adresse.",
     icon: "fiber",
     points: ["Ausbau und Buchbarkeit unterscheiden", "Hausanschluss einordnen", "Schritte bis zur Aktivierung klären"]
   },
@@ -132,6 +161,7 @@ export const services: ServicePage[] = [
       "DSL als mögliche Vodafone Internetlösung prüfen lassen, wenn Glasfaser oder Kabel je nach Adresse nicht passen.",
     intro:
       "DSL kann eine sinnvolle Alternative sein, wenn andere Technologien an der Adresse nicht verfügbar oder nicht passend sind.",
+    teaser: "Die solide Alternative, wenn Glasfaser oder Kabel an deiner Adresse nicht passen.",
     icon: "router",
     points: ["Verfügbarkeit einordnen", "Bedarf und Nutzung prüfen", "Alternativen sauber vergleichen"]
   },
@@ -143,6 +173,7 @@ export const services: ServicePage[] = [
       "Vodafone Mobilfunk Beratung für Celle, Hannover, Wietze und Umgebung: Tarife, Zusatzkarten und Kombi-Möglichkeiten verständlich erklärt.",
     intro:
       "Mobilfunk wird nach echtem Nutzungsverhalten, Familie, Datenbedarf und Kombi-Möglichkeiten betrachtet.",
+    teaser: "Tarife und Zusatzkarten nach echter Nutzung statt nach Werbeversprechen.",
     icon: "phone",
     points: ["Nutzung statt Tarifchaos", "Zusatzkarten einordnen", "Kombi nur wenn sinnvoll"]
   },
@@ -154,6 +185,7 @@ export const services: ServicePage[] = [
       "Vodafone TV und GigaTV verständlich beraten lassen: Sender, Komfortfunktionen und Kombi-Möglichkeiten einordnen.",
     intro:
       "Bei TV zählen Sender, Bedienkomfort, Geräte und die passende Kombination mit deinem Internetanschluss.",
+    teaser: "Sender, Bedienkomfort und Geräte – passend zu deinem Internetanschluss.",
     icon: "tv",
     points: ["TV-Setup verständlich machen", "GigaTV einordnen", "Kombi mit Internet prüfen"]
   },
@@ -165,6 +197,7 @@ export const services: ServicePage[] = [
       "Vodafone Kombi-Beratung für Internet, Mobilfunk und TV: nur empfehlen, wenn es wirklich zum Bedarf passt.",
     intro:
       "Internet, Mobilfunk und TV werden gemeinsam betrachtet, ohne automatisch alles zusammenzubuchen.",
+    teaser: "Internet, Mobilfunk und TV gemeinsam betrachten – nur wenn es wirklich passt.",
     icon: "signal",
     points: ["Haushalt und Familie betrachten", "Doppelte Leistungen vermeiden", "Empfehlung nach Bedarf"]
   },
@@ -176,6 +209,7 @@ export const services: ServicePage[] = [
       "Vodafone Verfügbarkeit für Internet, Glasfaser, Kabel je nach Adresse, DSL, Mobilfunk und TV persönlich prüfen lassen.",
     intro:
       "Deine Möglichkeiten werden anhand von Ort, Adresse, Gebäude und Produktwunsch eingeordnet.",
+    teaser: "Ort, Adresse und Gebäude persönlich prüfen lassen – mit verständlicher Rückmeldung.",
     icon: "check",
     points: ["Adresse genau angeben", "Technologie verständlich einordnen", "Rückmeldung mit Empfehlung"]
   }
@@ -508,4 +542,9 @@ export function serviceFaqs(service: ServicePage) {
   };
 
   return [...(specific[service.slug] ?? []), ...common];
+}
+
+/** Kurzname eines Beratungsthemas, z. B. „Glasfaser“ statt „Glasfaser Beratung“. */
+export function shortServiceName(service: ServicePage) {
+  return service.h1.replace(/[- ]Beratung$/, "");
 }

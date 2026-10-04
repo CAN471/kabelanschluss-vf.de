@@ -1,34 +1,23 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ContactForm } from "@/components/ContactForm";
+import type { ReactNode } from "react";
+import { ArrowRight, BookOpen, Clock3, Info, UserRound } from "lucide-react";
+import { ConnectionDiagram } from "@/components/ConnectionPath";
+import { ConsultWizard } from "@/components/ConsultWizard";
+import { FaqList } from "@/components/Faq";
+import { GuideCover } from "@/components/GuideCover";
 import { Icon } from "@/components/Icons";
 import { JsonLd } from "@/components/JsonLd";
+import { PageHero } from "@/components/PageHero";
+import { RegionMap } from "@/components/RegionMap";
 import { CtaBand } from "@/components/Section";
+import { AvailabilityVisual, CoaxCrossSection, ComboVisual, HotlineMini, HouseConnectionDiagram, UsageGrid } from "@/components/Visuals";
 import { ZoomableImage } from "@/components/ZoomableImage";
-import { ComboVisual, HotlineSplit, HouseConnectionVisual, RegionSignal, UsageMatrix } from "@/components/Visuals";
-import {
-  AvailabilityCheckVisual,
-  CableCrossSectionVisual,
-  FiberVsCableVisual,
-  HFCArticleLeadVisual,
-  HFCSignalFlowVisual,
-} from "@/components/visuals/PremiumVisuals";
-import { guides } from "@/lib/site";
 import { articleSchema, breadcrumbSchema, faqSchema, pageMetadata } from "@/lib/seo";
+import { guides, site, type GuidePage as Guide } from "@/lib/site";
 
 type Props = { params: Promise<{ slug: string }> };
-
-const sectionIcons: Record<string, string> = {
-  hfc: "coax",
-  fiber: "fiber",
-  compare: "signal",
-  availability: "pin",
-  usage: "home",
-  hotline: "callback",
-  combo: "tv",
-  region: "pin"
-};
 
 const guideMedia: Record<string, { after: number; caption: string; aspectRatio?: string }> = {
   "wie-funktioniert-kabel-internet": {
@@ -39,12 +28,12 @@ const guideMedia: Record<string, { after: number; caption: string; aspectRatio?:
   "wie-funktioniert-glasfaser": {
     after: 0,
     caption: "Glasfaserleitungen übertragen Daten über Lichtsignale. Quelle: Vodafone.",
-    aspectRatio: "16 / 12"
+    aspectRatio: "16 / 12.5"
   },
   "kabel-oder-glasfaser": {
     after: 0,
     caption: "DSL, Glasfaser und Kabel nutzen unterschiedliche Wege bis zum Gebäude. Quelle: Vodafone.",
-    aspectRatio: "16 / 11"
+    aspectRatio: "16 / 11.3"
   },
   "vodafone-verfuegbarkeit-pruefen": {
     after: 1,
@@ -62,27 +51,57 @@ const guideMedia: Record<string, { after: number; caption: string; aspectRatio?:
     aspectRatio: "16 / 9"
   },
   "internet-mobilfunk-tv-kombinieren": {
-    after: 0,
+    after: 1,
     caption: "Internet zuhause, Mobilfunk unterwegs und TV lassen sich passend zum Alltag gemeinsam betrachten.",
     aspectRatio: "16 / 9"
   },
   "glasfaser-in-wietze-celle-und-umgebung": {
-    after: 0,
+    after: 1,
     caption: "Glasfasertechnik wird schrittweise ausgebaut; die konkrete Buchbarkeit bleibt adressabhängig. Quelle: Vodafone.",
-    aspectRatio: "16 / 11"
+    aspectRatio: "16 / 11.3"
   }
 };
 
-function GuideLeadVisual({ slug }: { slug: string }) {
-  if (slug === "wie-funktioniert-kabel-internet") return <HFCArticleLeadVisual />;
-  if (slug === "wie-funktioniert-glasfaser") return <FiberVsCableVisual active={3} />;
-  if (slug === "kabel-oder-glasfaser") return <FiberVsCableVisual active={1} />;
-  if (slug === "vodafone-verfuegbarkeit-pruefen") return <AvailabilityCheckVisual active={2} />;
-  if (slug === "internet-tarif-waehlen") return <UsageMatrix />;
-  if (slug === "vodafone-beratung-statt-hotline") return <HotlineSplit />;
-  if (slug === "internet-mobilfunk-tv-kombinieren") return <ComboVisual />;
-  if (slug === "glasfaser-in-wietze-celle-und-umgebung") return <RegionSignal />;
-  return null;
+/** Zusätzliche Grafiken, die nach einem bestimmten Abschnitt erscheinen. */
+function sectionExtras(slug: string, index: number): ReactNode {
+  const extras: Record<string, Record<number, ReactNode>> = {
+    "wie-funktioniert-kabel-internet": {
+      0: <ConnectionDiagram preset="kabel" caption="Vereinfachter Signalweg im Kabel-Glasfaser-Hybridnetz." />,
+      2: <CoaxCrossSection />,
+      3: <HouseConnectionDiagram />
+    },
+    "wie-funktioniert-glasfaser": {
+      2: <ConnectionDiagram preset="glasfaser" caption="FTTB: Glasfaser bis ins Gebäude. FTTH: Glasfaser bis in die Wohnung." />
+    },
+    "kabel-oder-glasfaser": {
+      0: (
+        <>
+          <ConnectionDiagram preset="kabel" />
+          <ConnectionDiagram preset="glasfaser" />
+        </>
+      )
+    },
+    "vodafone-verfuegbarkeit-pruefen": { 0: <AvailabilityVisual /> },
+    "internet-tarif-waehlen": { 0: <UsageGrid /> },
+    "vodafone-beratung-statt-hotline": { 0: <HotlineMini /> },
+    "internet-mobilfunk-tv-kombinieren": { 0: <ComboVisual /> },
+    "glasfaser-in-wietze-celle-und-umgebung": {
+      0: (
+        <figure className="article-map">
+          <RegionMap focus="vodafone-beratung-wietze" className="rmap-compact" />
+          <figcaption>Wietze, Celle, Hannover und Umgebung – jede Adresse wird einzeln eingeordnet.</figcaption>
+        </figure>
+      )
+    }
+  };
+  return extras[slug]?.[index] ?? null;
+}
+
+function readingMinutes(guide: Guide) {
+  const words = [guide.intro, ...guide.sections.flatMap((section) => [section.title, section.body, ...(section.bullets ?? [])]), ...guide.faqs.flatMap((faq) => [faq.question, faq.answer])]
+    .join(" ")
+    .split(/\s+/).length;
+  return Math.max(2, Math.round(words / 180));
 }
 
 export function generateStaticParams() {
@@ -101,12 +120,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   });
 }
 
-export default async function GuidePage({ params }: Props) {
+export default async function GuideArticlePage({ params }: Props) {
   const { slug } = await params;
   const guide = guides.find((item) => item.slug === slug);
   if (!guide) notFound();
   const media = guideMedia[guide.slug];
-  const relatedGuides = guides.filter((item) => item.slug !== guide.slug).slice(0, 3);
+  const index = guides.findIndex((item) => item.slug === guide.slug);
+  const relatedGuides = [1, 2, 3].map((offset) => guides[(index + offset) % guides.length]);
 
   return (
     <>
@@ -114,97 +134,115 @@ export default async function GuidePage({ params }: Props) {
       <JsonLd data={articleSchema({ title: guide.h1, description: guide.description, path: `/ratgeber/${guide.slug}`, image: guide.image })} />
       <JsonLd data={faqSchema(guide.faqs)} />
 
-      <article className="article-page">
-        <header className="article-hero">
-          <div>
-            <p className="eyebrow">{guide.category}</p>
-            <h1>{guide.h1}</h1>
-            <p>{guide.intro}</p>
-          </div>
-          <div className="article-hero-visual"><GuideLeadVisual slug={guide.slug} /></div>
-        </header>
+      <PageHero
+        crumbs={[{ name: "Start", href: "/" }, { name: "Ratgeber", href: "/ratgeber" }, { name: guide.category }]}
+        eyebrow={guide.category}
+        title={guide.h1}
+        lead={guide.intro}
+        meta={
+          <>
+            <span><Clock3 aria-hidden="true" /> {readingMinutes(guide)} Min. Lesezeit</span>
+            <span><UserRound aria-hidden="true" /> {site.advisor}</span>
+            <span><BookOpen aria-hidden="true" /> {guide.sections.length} Abschnitte</span>
+          </>
+        }
+        aside={<div className="article-cover"><GuideCover guide={guide} size="lg" /></div>}
+      />
 
-        <div className="article-layout">
-          <aside className="content-nav" aria-label="Inhaltsverzeichnis">
-            <strong>Inhalt</strong>
-            {guide.sections.map((section, index) => (
-              <Link key={section.title} href={`#abschnitt-${index + 1}`}>{section.title}</Link>
-            ))}
-            <Link href="#beratung-anfragen">Beratung anfragen</Link>
+      <article className="article">
+        <div className="wrap article-layout">
+          <aside className="toc" aria-label="Inhaltsverzeichnis">
+            <p>Inhalt</p>
+            <ol>
+              {guide.sections.map((section, sectionIndex) => (
+                <li key={section.title}>
+                  <a href={`#abschnitt-${sectionIndex + 1}`}>
+                    <span>{String(sectionIndex + 1).padStart(2, "0")}</span>
+                    {section.title}
+                  </a>
+                </li>
+              ))}
+              <li>
+                <a href="#fragen"><span>?</span>Häufige Fragen</a>
+              </li>
+            </ol>
+            <Link className="toc-cta" href="#kontakt">
+              <span className="avatar" aria-hidden="true">JM</span>
+              <span>
+                <strong>Persönlich klären?</strong>
+                <small>Kostenlos beraten lassen</small>
+              </span>
+            </Link>
           </aside>
 
-          <div className="article-content">
-            <div className="article-note-grid">
-              <article>
+          <div className="article-body">
+            <div className="callout">
+              <span className="callout-icon"><Info aria-hidden="true" /></span>
+              <div>
                 <strong>Kurz erklärt</strong>
                 <p>{guide.intro}</p>
-              </article>
-              <article>
-                <strong>Wichtig zu wissen</strong>
-                <p>Welche Lösung passt, hängt von Adresse, Gebäude, Ausbau und Nutzung ab.</p>
-              </article>
+                <p className="callout-note">Welche Lösung passt, hängt immer von Adresse, Gebäude, Ausbau und Nutzung ab.</p>
+              </div>
             </div>
 
-            {guide.sections.map((section, index) => (
-              <section className="article-section" id={`abschnitt-${index + 1}`} key={section.title}>
-                <div className="article-section-title">
-                  <span>{String(index + 1).padStart(2, "0")}</span>
-                  <Icon name={sectionIcons[section.type ?? ""] ?? guide.icon} />
-                  <h2>{section.title}</h2>
-                </div>
-                <p className="article-section-copy">{section.body}</p>
+            {guide.sections.map((section, sectionIndex) => (
+              <section className="article-section" id={`abschnitt-${sectionIndex + 1}`} key={section.title}>
+                <h2>
+                  <span>{String(sectionIndex + 1).padStart(2, "0")}</span>
+                  {section.title}
+                </h2>
+                <p>{section.body}</p>
                 {section.bullets && (
-                  <ul className="clean-list">
+                  <ul className="article-bullets">
                     {section.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
                   </ul>
                 )}
-                {guide.slug === "wie-funktioniert-kabel-internet" && index === 0 && <HFCSignalFlowVisual active={8} />}
-                {media?.after === index && (
-                  <ZoomableImage
-                    src={guide.image}
-                    alt={guide.imageAlt}
-                    caption={media.caption}
-                    aspectRatio={media.aspectRatio}
-                  />
+                {sectionExtras(guide.slug, sectionIndex)}
+                {media?.after === sectionIndex && (
+                  <ZoomableImage src={guide.image} alt={guide.imageAlt} caption={media.caption} aspectRatio={media.aspectRatio} />
                 )}
-                {guide.slug === "wie-funktioniert-kabel-internet" && index === 2 && <CableCrossSectionVisual />}
-                {guide.slug === "wie-funktioniert-kabel-internet" && index === 3 && <HouseConnectionVisual />}
               </section>
             ))}
 
-            <section className="article-faq">
+            <section className="article-faq" id="fragen">
               <h2>Häufige Fragen</h2>
-              {guide.faqs.map((item) => (
-                <details key={item.question}>
-                  <summary>{item.question}</summary>
-                  <p>{item.answer}</p>
-                </details>
-              ))}
+              <FaqList items={guide.faqs} />
             </section>
 
-            <section className="related-guides" aria-labelledby="related-guides-title">
+            <div className="article-author">
+              <span className="avatar avatar-lg" aria-hidden="true">JM</span>
               <div>
-                <p className="eyebrow">Weiterlesen</p>
-                <h2 id="related-guides-title">Passende Themen.</h2>
+                <strong>{site.advisor}</strong>
+                <p>{site.role} für Wietze, Celle, Hannover und Umgebung. Erklärt Technik so, dass Entscheidungen leichter fallen.</p>
               </div>
-              <div>
-                {relatedGuides.map((item) => (
-                  <Link key={item.slug} href={`/ratgeber/${item.slug}`}>
-                    <Icon name={item.icon} />
-                    <span>{item.h1}</span>
-                    <b aria-hidden="true">↗</b>
-                  </Link>
-                ))}
-              </div>
-            </section>
+              <Link className="btn btn-ink btn-sm" href="#kontakt">Frage stellen</Link>
+            </div>
           </div>
         </div>
       </article>
 
-      <div id="beratung-anfragen">
-        <CtaBand />
-        <ContactForm />
-      </div>
+      <section className="section section-tight">
+        <div className="wrap">
+          <div className="related-head">
+            <h2>Passende Themen</h2>
+            <Link className="link-arrow" href="/ratgeber">Alle Ratgeber <ArrowRight aria-hidden="true" /></Link>
+          </div>
+          <div className="guide-grid">
+            {relatedGuides.map((item) => (
+              <Link key={item.slug} href={`/ratgeber/${item.slug}`} className="guide-card">
+                <GuideCover guide={item} />
+                <span className="guide-card-body">
+                  <strong>{item.h1}</strong>
+                  <span className="guide-card-more"><Icon name={item.icon} /> {item.category}</span>
+                </span>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <CtaBand />
+      <ConsultWizard />
     </>
   );
 }
