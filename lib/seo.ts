@@ -138,7 +138,7 @@ export function articleSchema({
     mainEntityOfPage: absoluteUrl(path),
     image: absoluteUrl(image),
     datePublished: "2026-06-25",
-    dateModified: "2026-07-13",
+    dateModified: "2026-10-04",
     author: { "@type": "Person", name: site.advisor },
     publisher: {
       "@type": "Organization",

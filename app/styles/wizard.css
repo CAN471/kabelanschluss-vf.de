@@ -1,0 +1,803 @@
+/* ==========================================================================
+   Beratungs-Assistent
+   ========================================================================== */
+
+.consult {
+  position: relative;
+  isolation: isolate;
+  padding-block: var(--section);
+  background:
+    radial-gradient(50% 40% at 100% 0%, rgba(230, 0, 0, 0.08), transparent 70%),
+    linear-gradient(180deg, var(--canvas), var(--canvas-2));
+}
+
+.consult-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr);
+  gap: clamp(36px, 5vw, 76px);
+  align-items: start;
+}
+
+.consult-aside {
+  position: sticky;
+  top: 110px;
+}
+
+.consult-aside h2 {
+  margin-bottom: 18px;
+  font-size: clamp(2.3rem, 4.8vw, 4rem);
+  font-weight: 800;
+  letter-spacing: -0.055em;
+  line-height: 0.98;
+}
+
+.consult-person {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 30px 0 14px;
+  padding: 14px 18px 14px 14px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  background: #fff;
+}
+
+.consult-person > span:last-child {
+  display: grid;
+  line-height: 1.3;
+}
+
+.consult-person strong {
+  color: var(--ink);
+  font-size: 1.04rem;
+}
+
+.consult-person small {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.consult-channels {
+  display: grid;
+  gap: 8px;
+}
+
+.consult-channels a {
+  display: grid;
+  grid-template-columns: 44px 1fr 20px;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px 10px 10px;
+  border-radius: 20px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.55);
+  transition:
+    background-color 0.2s ease,
+    transform 0.35s var(--ease-out),
+    border-color 0.2s ease;
+}
+
+.consult-channels a:hover {
+  background: #fff;
+  border-color: var(--line-2);
+  transform: translateX(4px);
+}
+
+.consult-channels a > span:nth-child(2) {
+  display: grid;
+  min-width: 0;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 680;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+
+.consult-channels small {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.consult-channels > a > svg {
+  width: 18px;
+  height: 18px;
+  color: var(--muted-2);
+}
+
+.consult-channel-icon {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--canvas-2);
+  color: var(--ink);
+}
+
+.consult-channel-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.consult-channel-icon.is-wa {
+  background: #e8fbef;
+  color: #128c4b;
+}
+
+.consult-next {
+  margin-top: 30px;
+}
+
+.consult-next > p {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.74rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.consult-next ol {
+  display: grid;
+  gap: 12px;
+  counter-reset: next;
+}
+
+.consult-next li {
+  position: relative;
+  padding-left: 38px;
+  color: var(--ink-2);
+  font-size: 0.94rem;
+  counter-increment: next;
+}
+
+.consult-next li::before {
+  content: counter(next);
+  position: absolute;
+  left: 0;
+  top: 1px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 760;
+}
+
+/* Card */
+
+.consult-card {
+  position: relative;
+  padding: clamp(22px, 3.4vw, 42px);
+  border-radius: 36px;
+  border: 1px solid var(--line);
+  background: #fff;
+  box-shadow: var(--shadow-lg);
+}
+
+.consult-progress ol {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.consult-progress button {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  padding: 4px 0;
+  color: var(--muted-2);
+  text-align: left;
+  border-radius: 999px;
+}
+
+.consult-progress button:disabled {
+  cursor: default;
+}
+
+.consult-step-num {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+  font-size: 0.82rem;
+  font-weight: 780;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease,
+    color 0.3s ease;
+}
+
+.consult-step-num svg {
+  width: 15px;
+  height: 15px;
+  stroke-width: 3;
+}
+
+.consult-step-label {
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+.consult-progress .is-done button {
+  color: var(--ink-2);
+}
+
+.consult-progress .is-done .consult-step-num {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+}
+
+.consult-progress .is-current button {
+  color: var(--ink);
+}
+
+.consult-progress .is-current .consult-step-num {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+  box-shadow: 0 0 0 5px rgba(15, 16, 18, 0.08);
+}
+
+.consult-bar {
+  height: 4px;
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 4px;
+  background: var(--canvas-2);
+}
+
+.consult-bar span {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  background: linear-gradient(90deg, var(--red), #ff5a4f);
+  box-shadow: 0 0 12px rgba(230, 0, 0, 0.5);
+  transition: width 0.7s var(--ease-out);
+}
+
+.consult-step {
+  padding-top: 30px;
+  animation: step-in 0.55s var(--ease-out) both;
+}
+
+@keyframes step-in {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.consult-count {
+  color: var(--red);
+  font-size: 0.74rem;
+  font-weight: 760;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.consult-step h3 {
+  margin: 8px 0 8px;
+  font-size: clamp(1.6rem, 2.8vw, 2.3rem);
+  font-weight: 790;
+  letter-spacing: -0.045em;
+}
+
+.consult-step h3:focus {
+  outline: none;
+}
+
+.consult-hint {
+  margin-bottom: 26px;
+  color: var(--muted);
+}
+
+/* Topics */
+
+.topic-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.topic {
+  position: relative;
+  display: grid;
+  align-content: space-between;
+  justify-items: start;
+  gap: 18px;
+  min-height: 128px;
+  padding: 18px 16px 16px;
+  border-radius: 22px;
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+  text-align: left;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.35s var(--ease-spring),
+    box-shadow 0.3s ease;
+}
+
+.topic:hover {
+  border-color: rgba(230, 0, 0, 0.45);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-sm);
+}
+
+.topic[aria-pressed="true"] {
+  border-color: var(--red);
+  background: var(--red-50);
+  box-shadow: 0 0 0 4px rgba(230, 0, 0, 0.09);
+}
+
+.topic-icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 15px;
+  background: var(--canvas);
+  color: var(--ink);
+  transition: background-color 0.25s ease, color 0.25s ease, transform 0.4s var(--ease-spring);
+}
+
+.topic-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.topic[aria-pressed="true"] .topic-icon {
+  background: var(--red);
+  color: #fff;
+  transform: rotate(-6deg) scale(1.04);
+}
+
+.topic-label {
+  color: var(--ink);
+  font-size: 0.96rem;
+  font-weight: 720;
+  line-height: 1.25;
+}
+
+.topic-check {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1.5px solid var(--line-2);
+  color: transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease,
+    transform 0.4s var(--ease-spring);
+}
+
+.topic-check svg {
+  width: 14px;
+  height: 14px;
+  stroke-width: 3.2;
+}
+
+.topic[aria-pressed="true"] .topic-check {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+  transform: scale(1.1);
+}
+
+/* Fields */
+
+.fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px 14px;
+}
+
+.field-wide {
+  grid-column: 1 / -1;
+}
+
+.field {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.field-label,
+.field-chips legend {
+  color: var(--ink);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.field-chips legend {
+  margin-bottom: 10px;
+}
+
+.field-label b {
+  color: var(--red);
+}
+
+.field-label em {
+  margin-left: 4px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--canvas);
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-style: normal;
+  font-weight: 650;
+}
+
+.field input,
+.field textarea {
+  width: 100%;
+  min-height: 56px;
+  padding: 0 18px;
+  border-radius: 16px;
+  border: 1.5px solid var(--line-2);
+  background: #fbfaf8;
+  font-size: 1rem;
+  font-weight: 560;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.field textarea {
+  min-height: 104px;
+  padding: 14px 18px;
+  line-height: 1.5;
+  resize: vertical;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--muted-2);
+  font-weight: 500;
+}
+
+.field input:hover,
+.field textarea:hover {
+  border-color: rgba(15, 16, 18, 0.24);
+}
+
+.field input:focus,
+.field textarea:focus {
+  outline: none;
+  border-color: var(--red);
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(230, 0, 0, 0.12);
+}
+
+.field input[aria-invalid="true"] {
+  border-color: var(--red-700);
+  background: var(--red-50);
+}
+
+.field-error {
+  display: block;
+  color: var(--red-700);
+  font-size: 0.83rem;
+  font-weight: 650;
+}
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.consult-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 14px;
+  padding: 12px 16px;
+  border-radius: 18px;
+  background: var(--canvas);
+  color: var(--ink-2);
+  font-size: 0.88rem;
+  font-weight: 650;
+}
+
+.consult-summary span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.consult-summary svg {
+  width: 16px;
+  height: 16px;
+  color: var(--red);
+}
+
+.consult-summary button {
+  margin-left: auto;
+  color: var(--red);
+  font-weight: 720;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.consent {
+  position: relative;
+  display: grid;
+  grid-template-columns: 26px 1fr;
+  gap: 12px;
+  align-items: start;
+  padding: 14px 16px;
+  border-radius: 18px;
+  background: var(--canvas);
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.5;
+  cursor: pointer;
+}
+
+.consent input {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  margin: 0;
+  opacity: 0;
+  cursor: pointer;
+}
+
+.consent-box {
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 8px;
+  border: 1.5px solid var(--line-2);
+  background: #fff;
+  color: transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.consent-box svg {
+  width: 16px;
+  height: 16px;
+  stroke-width: 3.2;
+}
+
+.consent input:checked + .consent-box {
+  border-color: var(--red);
+  background: var(--red);
+  color: #fff;
+}
+
+.consent input:focus-visible + .consent-box {
+  outline: 3px solid rgba(230, 0, 0, 0.5);
+  outline-offset: 2px;
+}
+
+.consent a {
+  color: var(--ink);
+  font-weight: 650;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.consent .field-error {
+  grid-column: 2;
+}
+
+.consent.has-error {
+  background: var(--red-50);
+}
+
+.consent.has-error .consent-box {
+  border-color: var(--red-700);
+}
+
+/* Navigation */
+
+.consult-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 32px;
+  padding-top: 24px;
+  border-top: 1px solid var(--line);
+}
+
+.consult-nav-main {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.consult-nav-note {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.consult-foot {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* Done */
+
+.consult-done {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  padding: clamp(24px, 4vw, 48px) 8px;
+  text-align: center;
+}
+
+.consult-done h3 {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  letter-spacing: -0.045em;
+}
+
+.consult-done h3:focus {
+  outline: none;
+}
+
+.consult-done > p {
+  max-width: 46ch;
+  color: var(--muted);
+}
+
+.consult-done-icon {
+  display: grid;
+  place-items: center;
+  width: 92px;
+  height: 92px;
+  border-radius: 50%;
+  background: var(--red);
+  color: #fff;
+  box-shadow:
+    0 0 0 12px rgba(230, 0, 0, 0.08),
+    0 20px 40px -14px rgba(230, 0, 0, 0.75);
+  animation: done-pop 0.7s var(--ease-spring) both;
+}
+
+.consult-done-icon svg {
+  width: 44px;
+  height: 44px;
+  stroke-width: 3;
+}
+
+@keyframes done-pop {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+.consult-done-fallback {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin: 8px 0 12px;
+  padding: 16px 20px;
+  border-radius: 20px;
+  background: var(--canvas);
+  font-size: 0.88rem;
+}
+
+.consult-done-fallback span {
+  width: 100%;
+  color: var(--muted);
+}
+
+.consult-done-fallback a {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--ink);
+  font-weight: 680;
+}
+
+.consult-done-fallback svg {
+  width: 16px;
+  height: 16px;
+  color: var(--red);
+}
+
+@media (max-width: 1000px) {
+  .consult-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .consult-aside {
+    position: static;
+  }
+
+  .consult-next {
+    display: none;
+  }
+}
+
+@media (max-width: 700px) {
+  .topic-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .fields {
+    grid-template-columns: 1fr;
+  }
+
+  .consult-step-label {
+    display: none;
+  }
+
+  .consult-progress .is-current .consult-step-label {
+    display: inline;
+  }
+
+  .consult-progress ol {
+    grid-template-columns: auto auto auto auto;
+    justify-content: space-between;
+  }
+
+  .consult-card {
+    border-radius: 28px;
+  }
+
+  .consult-nav-main,
+  .consult-nav-main .btn {
+    width: 100%;
+  }
+
+  .consult-nav {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .consult-nav > .btn-quiet,
+  .consult-nav-note {
+    align-self: center;
+  }
+}
+
+@media (max-width: 380px) {
+  .topic {
+    min-height: 112px;
+    padding: 14px 12px 12px;
+  }
+}

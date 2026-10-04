@@ -1,11 +1,15 @@
+import type { CSSProperties } from "react";
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, ArrowUpRight } from "lucide-react";
+import { ConsultWizard } from "@/components/ConsultWizard";
+import { GuideCover } from "@/components/GuideCover";
 import { Icon } from "@/components/Icons";
 import { JsonLd } from "@/components/JsonLd";
-import { SectionIntro } from "@/components/Section";
-import { guides } from "@/lib/site";
+import { PageHero } from "@/components/PageHero";
+import { CtaBand, SectionHead } from "@/components/Section";
 import { breadcrumbSchema, pageMetadata, websiteSchema } from "@/lib/seo";
+import { guides } from "@/lib/site";
 
 export const metadata: Metadata = pageMetadata({
   title: "Vodafone Ratgeber | Kabel, Glasfaser, Internet & TV erklärt",
@@ -15,48 +19,68 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default function GuideHubPage() {
+  const [lead, ...rest] = guides;
+
   return (
     <>
       <JsonLd data={websiteSchema()} />
       <JsonLd data={breadcrumbSchema([{ name: "Start", href: "/" }, { name: "Ratgeber", href: "/ratgeber" }])} />
-      <section className="sub-hero guide-hub-hero">
-        <div>
-          <p className="eyebrow">Vodafone Ratgeber</p>
-          <h1>Internet und Technik einfach erklärt.</h1>
-          <p>
-            Verständliche Antworten zu Kabelinternet, Glasfaser, DSL, Mobilfunk, TV und Verfügbarkeit.
-          </p>
+
+      <PageHero
+        crumbs={[{ name: "Start", href: "/" }, { name: "Ratgeber" }]}
+        eyebrow="Vodafone Ratgeber"
+        title={<>Internet und Technik, <span className="text-red">einfach erklärt.</span></>}
+        lead="Verständliche Antworten zu Kabelinternet, Glasfaser, DSL, Mobilfunk, TV und Verfügbarkeit – damit du weißt, was zu dir passt, bevor du entscheidest."
+        aside={
+          <nav className="shortcut-card" aria-label="Beliebte Ratgeber">
+            <p>Beliebte Themen</p>
+            {guides.slice(0, 4).map((guide) => (
+              <Link key={guide.slug} href={`/ratgeber/${guide.slug}`}>
+                <span><Icon name={guide.icon} /></span>
+                <strong>{guide.h1}</strong>
+                <ArrowUpRight aria-hidden="true" />
+              </Link>
+            ))}
+          </nav>
+        }
+      />
+
+      <section className="section section-tight" id="themen">
+        <div className="wrap">
+          <Link href={`/ratgeber/${lead.slug}`} className="guide-feature" data-reveal>
+            <GuideCover guide={lead} size="lg" />
+            <span className="guide-feature-body">
+              <span className="guide-feature-tag">Empfohlen · {lead.category}</span>
+              <strong>{lead.h1}</strong>
+              <span>{lead.intro}</span>
+              <span className="guide-card-more">Artikel lesen <ArrowRight aria-hidden="true" /></span>
+            </span>
+          </Link>
+
+          <SectionHead eyebrow="Alle Themen" title="Wissen, was zu dir passt." />
+          <div className="guide-grid">
+            {rest.map((guide, index) => (
+              <Link
+                key={guide.slug}
+                href={`/ratgeber/${guide.slug}`}
+                className="guide-card"
+                data-reveal
+                style={{ "--d": `${(index % 3) * 90}ms` } as CSSProperties}
+              >
+                <GuideCover guide={guide} />
+                <span className="guide-card-body">
+                  <strong>{guide.h1}</strong>
+                  <span className="guide-card-text">{guide.intro}</span>
+                  <span className="guide-card-more">Weiterlesen <ArrowRight aria-hidden="true" /></span>
+                </span>
+              </Link>
+            ))}
+          </div>
         </div>
-        <nav className="guide-hub-shortcuts" aria-label="Beliebte Ratgeber">
-          {guides.slice(0, 4).map((guide) => (
-            <Link key={guide.slug} href={`/ratgeber/${guide.slug}`}>
-              <Icon name={guide.icon} />
-              <span>{guide.h1}</span>
-              <b aria-hidden="true">↗</b>
-            </Link>
-          ))}
-        </nav>
       </section>
 
-      <section className="section" id="themen">
-        <SectionIntro eyebrow="Alle Themen" title="Wissen, was zu dir passt.">
-          <p>Die Artikel erklären Anschlussarten, Verfügbarkeit und typische Entscheidungen rund um Internet zuhause, Mobilfunk und TV.</p>
-        </SectionIntro>
-        <div className="guide-grid guide-grid-large">
-          {guides.map((guide, index) => (
-            <Link className={index === 0 ? "guide-card guide-card-featured" : "guide-card"} key={guide.slug} href={`/ratgeber/${guide.slug}`}>
-              <figure>
-                <Image src={guide.image} alt={guide.imageAlt} fill sizes={index === 0 ? "(min-width: 900px) 52vw, 100vw" : "(min-width: 900px) 25vw, 100vw"} />
-                <span className="guide-icon"><Icon name={guide.icon} /></span>
-              </figure>
-              <p className="eyebrow">{guide.category}</p>
-              <h2>{guide.h1}</h2>
-              <p>{guide.intro}</p>
-              <span className="card-link">Artikel lesen</span>
-            </Link>
-          ))}
-        </div>
-      </section>
+      <CtaBand title="Lieber persönlich erklärt bekommen?" text="Jan beantwortet deine Fragen zu Technik, Verfügbarkeit und Tarifen – kostenlos und in verständlicher Sprache." />
+      <ConsultWizard />
     </>
   );
 }
